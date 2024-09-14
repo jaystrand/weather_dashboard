@@ -34,10 +34,12 @@ router.post('/', async (req, res) => {
     { upsert: true, new: true }
   );
 
+  res.status(200).json(weatherData);
+
 } catch (error) {
   console.error('Error while getting weather data', error);
 
-  if (error.response && error.response.status === 404) {
+  if ((error as any).response && (error as any).response.status === 404) {
     return res.status(404).json({ message: 'City not found' });
   }
 
@@ -46,9 +48,29 @@ router.post('/', async (req, res) => {
 });
 
 // TODO: GET search history
-router.get('/history', async (req, res) => {});
+router.get('/history', async (req, res) => {
+  try {
+    const cities = await City.find({});
+    res.status(200).json(cities);
+  } catch (error) {
+    console.error('Error while getting search history', error);
+    res.status(500).json({ error: 'Internal server error occured while getting search history' });
+  }
+});
 
 // * BONUS TODO: DELETE city from search history
-router.delete('/history/:id', async (req, res) => {});
+router.delete('/history/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const city = await City.findById(id);
+    if (!city) {
+      return res.status(404).json({ message: 'City not found' });
+    }
+    res.status(204).json({ message: 'City deleted successfully' });
+  } catch (error) {
+    console.error('Error while deleting city from search history', error);
+    res.status(500).json({ error: 'Internal server error occured while deleting city from search history' });
+  }
+});
 
 export default router;
