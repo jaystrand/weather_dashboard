@@ -1,6 +1,6 @@
-import dotenv from 'dotenv';
+import "dotenv/config";
 import axios from 'axios';
-dotenv.config();
+
 
 // Define an interface for the Coordinates object
 interface Coordinates {

@@ -1,17 +1,16 @@
-import { Router } from 'express';
+import { Router, type Request, type Response } from 'express';
 const router = Router();
+import "dotenv/config";
+import HistoryService from '../../service/historyService.js';
+import WeatherService from '../../service/weatherService.js';
 
-// import HistoryService from '../../service/historyService.js';
-// import WeatherService from '../../service/weatherService.js';
-const express = require('express');
-const axios = require('axios');
-const City = require('../models/City');
 
-const WEATHER_API_KEY = process.env.WEATHER_API_KEY;
-const WEATHER_API_BASE_URL = 'https://api.openweathermap.org/data/2.5/weather';
+const WEATHER_API_KEY:string = process.env.API_KEY || '';
+const WEATHER_API_BASE_URL:string = process.env.API_BASE_URL || '';
 
-// TODO: POST Request with city name to retrieve weather data
-router.post('/', async (req, res) => {
+// POST Request with city name to retrieve weather data
+router.post('/', async (req: Request, res: Response) => {
+  console.log(req.body);
   try {
     const { cityName } = req.body;
 
@@ -19,57 +18,53 @@ router.post('/', async (req, res) => {
       return res.status(400).json({ message: 'City name is required' });
     }
 
-    const response = await axios.get(`${WEATHER_API_BASE_URL}`, {
-      params: {
-        q: cityName,
-        appid: WEATHER_API_KEY,
-        units: 'metric',
+    const url = new URL(WEATHER_API_BASE_URL);
+    url.searchParams.append('q', cityName);
+    url.searchParams.append('appid', WEATHER_API_KEY);
+    url.searchParams.append('units', 'metric');
+
+    const response = await fetch(url.toString());
+    
+    if (!response.ok) {
+      if (response.status === 404) {
+        return res.status(404).json({ message: 'City not found' });
       }
-    });
-  const weatherData = response.data;
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
 
-  await City.findOneAndUpdate(
-    { name: cityName },
-    { name: cityName },
-    { upsert: true, new: true }
-  );
+    const weatherData = await response.json();
 
-  res.status(200).json(weatherData);
+    
 
-} catch (error) {
-  console.error('Error while getting weather data', error);
+    res.status(200).json(weatherData);
 
-  if ((error as any).response && (error as any).response.status === 404) {
-    return res.status(404).json({ message: 'City not found' });
+  } catch (error) {
+    console.error('Error while getting weather data', error);
+    res.status(500).json({ error: 'Internal server error occurred while getting weather data' });
   }
-
-  res.status(500).json({ error: 'Internal server error occured while getting weather data' });
-}
 });
 
-// TODO: GET search history
+// GET search history
 router.get('/history', async (req, res) => {
   try {
-    const cities = await City.find({});
-    res.status(200).json(cities);
+    //const cities = await City.find({});
+    
   } catch (error) {
     console.error('Error while getting search history', error);
-    res.status(500).json({ error: 'Internal server error occured while getting search history' });
+    res.status(500).json({ error: 'Internal server error occurred while getting search history' });
   }
 });
 
-// * BONUS TODO: DELETE city from search history
+// DELETE city from search history
 router.delete('/history/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const city = await City.findById(id);
-    if (!city) {
-      return res.status(404).json({ message: 'City not found' });
-    }
-    res.status(204).json({ message: 'City deleted successfully' });
+    
+    
+    res.status(204).send();
   } catch (error) {
     console.error('Error while deleting city from search history', error);
-    res.status(500).json({ error: 'Internal server error occured while deleting city from search history' });
+    res.status(500).json({ error: 'Internal server error occurred while deleting city from search history' });
   }
 });
 
