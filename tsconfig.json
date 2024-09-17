@@ -2,7 +2,7 @@
   
   "compilerOptions": {
     "target": "ES6",
-    "module": "CommonJS",
+    "module": "ESNext",
     "ignoreDeprecations": "5.0",
     /* Basic Options */
     /* Modules */

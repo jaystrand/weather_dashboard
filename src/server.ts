@@ -1,6 +1,6 @@
 import "dotenv/config";
-const express = require('express');
-require('dotenv').config();
+import express from 'express';
+
 
 // Import the routes
 import routes from './routes/index.js';
