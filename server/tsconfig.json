@@ -1,0 +1,23 @@
+{
+  
+  "compilerOptions": {
+    "target": "ES6",
+    "module": "ESNext",
+    "ignoreDeprecations": "5.0",
+    /* Basic Options */
+    /* Modules */
+    "rootDir": "src", 
+    "allowJs": true,
+
+    
+    "outDir": "dist", 
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "noEmitOnError": true 
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "**/*.spec.ts"]
+}
+
