@@ -25,6 +25,8 @@ router.post('/', async (req: Request, res: Response) => {
     console.log(url.toString());
 
     const response = await WeatherService.getWeatherForCity(cityName);
+
+    HistoryService.addCity(cityName);
     
 
     
@@ -43,6 +45,8 @@ router.post('/', async (req: Request, res: Response) => {
 router.get('/history', async (req, res) => {
   try {
     //const cities = await City.find({});
+    const cities = await HistoryService.getCities();
+    res.status(200).json(cities);
     
   } catch (error) {
     console.error('Error while getting search history', error);
@@ -54,6 +58,8 @@ router.get('/history', async (req, res) => {
 router.delete('/history/:id', async (req, res) => {
   try {
     const { id } = req.params;
+
+    HistoryService.removeCity(id);
     
     
     res.status(204).send();

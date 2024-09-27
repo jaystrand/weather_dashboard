@@ -79,9 +79,10 @@ Render Functions
 const renderCurrentWeather = (currentWeather: any): void => {
   const { city, date, icon, iconDescription, tempF, windSpeed, humidity } =
     currentWeather;
+    console.log('currentWeather: ', currentWeather);
 
   // convert the following to typescript
-  heading.textContent = `${city} (${date})`;
+  heading.textContent = `${city} ${date}`;
   weatherIcon.setAttribute(
     'src',
     `https://openweathermap.org/img/w/${icon}.png`
