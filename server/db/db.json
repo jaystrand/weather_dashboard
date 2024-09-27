@@ -1,14 +1,30 @@
 [
   {
-    "name": "San Diego",
-    "id": "1727459221507"
+    "name": "Detroit",
+    "id": "1727461636936"
   },
   {
-    "name": "Seattle",
-    "id": "1727459226799"
+    "name": "Houston",
+    "id": "1727461647626"
+  },
+  {
+    "name": "Las Vegas",
+    "id": "1727461745390"
+  },
+  {
+    "name": "Minneapolis",
+    "id": "1727461771271"
+  },
+  {
+    "name": "Altoona",
+    "id": "1727461787863"
+  },
+  {
+    "name": "Cleveland",
+    "id": "1727461798892"
   },
   {
     "name": "Philadelphia",
-    "id": "1727459228904"
+    "id": "1727464145053"
   }
 ]
