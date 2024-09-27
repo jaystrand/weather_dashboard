@@ -24,22 +24,16 @@ router.post('/', async (req: Request, res: Response) => {
     url.searchParams.append('units', 'metric');
     console.log(url.toString());
 
-    const response = await fetch(url.toString());
+    const response = await WeatherService.getWeatherForCity(cityName);
+
+    HistoryService.addCity(cityName);
     
-
-    if (!response.ok) {
-      if (response.status === 404) {
-        return res.status(404).json({ message: 'City not found' });
-      }
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const weatherData = await response.json();
-    console.log(weatherData);
 
     
 
-    res.status(200).json(weatherData);
+    
+
+    res.status(200).json(response);
 
   } catch (error) {
     console.error('Error while getting weather data', error);
@@ -51,6 +45,8 @@ router.post('/', async (req: Request, res: Response) => {
 router.get('/history', async (req, res) => {
   try {
     //const cities = await City.find({});
+    const cities = await HistoryService.getCities();
+    res.status(200).json(cities);
     
   } catch (error) {
     console.error('Error while getting search history', error);
@@ -62,6 +58,8 @@ router.get('/history', async (req, res) => {
 router.delete('/history/:id', async (req, res) => {
   try {
     const { id } = req.params;
+
+    HistoryService.removeCity(id);
     
     
     res.status(204).send();
